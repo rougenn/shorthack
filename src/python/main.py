@@ -1,15 +1,21 @@
 from fastapi import FastAPI, UploadFile, File, Depends
 from sqlalchemy import create_engine, Column, Integer, Text, ForeignKey
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import declarative_base, sessionmaker, scoped_session, Session
 
-DATABASE_URL = "postgresql://user:password@db/mydatabase"
+# Настройки подключения к базе данных
+DATABASE_URL = "postgresql://user:password@localhost/mydatabase"
 
 # Настройка SQLAlchemy
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 SessionLocal = scoped_session(sessionmaker(bind=engine))
+
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(Integer, primary_key=True)
+    username = Column(Text, unique=True, nullable=False)
+    password = Column(Text, nullable=False)
 
 class TextFile(Base):
     __tablename__ = 'text_files'
